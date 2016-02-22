@@ -5,122 +5,233 @@ const ReactDOM = require('react-dom');
 
 console.log(React);
 
+const json = [
+	{
+		title: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
+		mp3: 'xxxxx'
 
-{
+	},
+	{
+		title: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
+		mp3: 'xxxxx'
 
-	const items = [
-		{
-			type: 'Banana',
-			color: 'Yellow'
-		},
-		{
-			type: 'Apple',
-			color: 'Red'
-		},
-		{
-			type: 'Pear',
-			color: 'Brown'
-		},
-		{
-			type: 'Orange',
-			color: 'orange'
-		},
-		{
-			type: 'Strawberry',
-			color: 'red'
-		}
-	];
+	},
+	{
+		title: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
+		mp3: 'xxxxx'
 
-	const Fruit = React.createClass({
+	},
+	{
+		title: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
+		mp3: 'xxxxx'
 
-		getInitialState() {
+	},
+	{
+		title: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
+		mp3: 'xxxxx'
 
-			return {
-				alert: this.setAlertState()
-			};
+	}
+];
 
-		},
+const Feed = React.createClass({
 
-		setAlertState(state = false) {
+	active(id) {
 
-			const alert = {};
+		this.props.app.setState({
+			active: id
+		});
 
-			this.props.items.map((item) => alert[item.type] = state);
+	},
 
-			return alert;
+	render() {
 
-		},
 
-		alertColor(type) {
+		//
+		// console.log(this.props.app)
 
-			const alert = this.state.alert;
+		return (
 
-			alert[type] = !alert[type];
-			this.setState({alert});
+			<ul className="podcast__feed">
+				{
+					this.props.json.map((episode, id) => {
 
-		},
+						let className = 'podcast__episode';
+						className = this.props.active === id ? `${className} ${className}--active` : className;
 
-		itemsState() {
+						return (
+							<li className={className}
+								key={id}
+								onClick={this.active.bind(this, id)}>
+								<h2>{episode.title}</h2>
+							</li>
+						);
 
-			const alert = this.state.alert;
-			const keys = Object.keys(this.state.alert);
-			let active = true;
+					})
+				}
+			</ul>
 
-			for (const key of keys) active = alert[key] ? active : false;
+		);
 
-			return active;
+	}
 
-		},
+});
 
-		toggleState() {
+const Player = React.createClass({
 
-			const newState = this.itemsState();
+	render() {
 
-			this.setState({
-				alert: this.setAlertState(!newState)
-			});
+		return (
+			<audio src={this} controls autoplay loop />
+		);
+	}
 
-		},
+});
 
-		render() {
+const App = React.createClass({
 
-			return (
-				<div className="fruit">
 
-					<button
-						role="button"
-						onClick={this.toggleState}
-					>
-						Toggle All
-					</button>
+	getInitialState() {
 
-					<ul>
-						{
-							this.props.items.map((item, id) => {
+		return {
+			active: null
+		};
 
-								const alertState = this.state.alert;
-								const alertClass = alertState[item.type] ? 'fruit__item--alert' : '';
+	},
 
-								return (
-									<li
-										key={id}
-										className={alertClass}
-										onClick={this.alertColor.bind(this, item.type)}
-									>
-										{item.type}
-									</li>
-								);
+	render() {
 
-							})
-						}
-					</ul>
-				</div>
-			);
-		}
-	});
+		return (
+			<div className="podcast">
+				<h1 className="podcast__heading"></h1>
+				<Feed app={this} json={this.props.json} active={this.state.active}/>
+			</div>
+		);
 
-	ReactDOM.render(
-		<Fruit items={items}/>,
-		document.getElementById('app')
-	);
-}
+	}
+
+});
+
+ReactDOM.render(
+	<App json={json}/>,
+	document.getElementById('podcast')
+);
+
+
+// {
+//
+// 	const items = [
+// 		{
+// 			type: 'Banana',
+// 			color: 'Yellow'
+// 		},
+// 		{
+// 			type: 'Apple',
+// 			color: 'Red'
+// 		},
+// 		{
+// 			type: 'Pear',
+// 			color: 'Brown'
+// 		},
+// 		{
+// 			type: 'Orange',
+// 			color: 'orange'
+// 		},
+// 		{
+// 			type: 'Strawberry',
+// 			color: 'red'
+// 		}
+// 	];
+//
+// 	const Fruit = React.createClass({
+//
+// 		getInitialState() {
+//
+// 			return {
+// 				alert: this.setAlertState()
+// 			};
+//
+// 		},
+//
+// 		setAlertState(state = false) {
+//
+// 			const alert = {};
+//
+// 			this.props.items.map((item) => alert[item.type] = state);
+//
+// 			return alert;
+//
+// 		},
+//
+// 		alertColor(type) {
+//
+// 			const alert = this.state.alert;
+//
+// 			alert[type] = !alert[type];
+// 			this.setState({alert});
+//
+// 		},
+//
+// 		itemsState() {
+//
+// 			const alert = this.state.alert;
+// 			const keys = Object.keys(this.state.alert);
+// 			let active = true;
+//
+// 			for (const key of keys) active = alert[key] ? active : false;
+//
+// 			return active;
+//
+// 		},
+//
+// 		toggleState() {
+//
+// 			const newState = this.itemsState();
+//
+// 			this.setState({
+// 				alert: this.setAlertState(!newState)
+// 			});
+//
+// 		},
+//
+// 		render() {
+//
+// 			return (
+// 				<div className="fruit">
+//
+// 					<button
+// 						role="button"
+// 						onClick={this.toggleState}
+// 					>
+// 						Toggle All
+// 					</button>
+//
+// 					<ul>
+// 						{
+// 							this.props.items.map((item, id) => {
+//
+// 								const alertState = this.state.alert;
+// 								const alertClass = alertState[item.type] ? 'fruit__item--alert' : '';
+//
+// 								return (
+// 									<li
+// 										key={id}
+// 										className={alertClass}
+// 										onClick={this.alertColor.bind(this, item.type)}
+// 									>
+// 										{item.type}
+// 									</li>
+// 								);
+//
+// 							})
+// 						}
+// 					</ul>
+// 				</div>
+// 			);
+// 		}
+// 	});
+//
+// 	ReactDOM.render(
+// 		<Fruit items={items}/>,
+// 		document.getElementById('app')
+// 	);
+// }

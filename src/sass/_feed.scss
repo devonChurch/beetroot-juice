@@ -1,0 +1,11 @@
+.podcast__feed {
+
+}
+
+.podcast__episode {
+    color: skyblue;
+
+    &--active {
+        color: darkblue;
+    }
+}
