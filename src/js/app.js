@@ -8,27 +8,27 @@ console.log(React);
 const json = [
 	{
 		title: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
-		mp3: 'xxxxx'
+		mp3: 'http://traffic.libsyn.com/xerohour/Xero_Gravity_Podcast_-_Courtney_and_JD_1.1.mp3'
 
 	},
 	{
 		title: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
-		mp3: 'xxxxx'
+		mp3: 'http://traffic.libsyn.com/xerohour/Xero_Gravity_Podcast_-_Judy_and_Dr_Sabine_1.1.mp3'
 
 	},
 	{
 		title: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
-		mp3: 'xxxxx'
+		mp3: 'http://traffic.libsyn.com/xerohour/Xero_Gravity_Podcast_-_Rochelle_and_Justin_2.0.mp3'
 
 	},
 	{
 		title: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
-		mp3: 'xxxxx'
+		mp3: 'http://traffic.libsyn.com/xerohour/Xero_Gravity_Podcast_-_David_and_Russ_2.0.mp3'
 
 	},
 	{
 		title: 'Lorem ipsum dolor sit amet, consectetur adipisicing.',
-		mp3: 'xxxxx'
+		mp3: 'http://traffic.libsyn.com/xerohour/Xero_Gravity_Podcast_-_Josh_and_Greg_3.0.mp3'
 
 	}
 ];
@@ -76,12 +76,22 @@ const Feed = React.createClass({
 
 });
 
+// <audio src={this.props.json[id].mp3} controls autoPlay loop />
+
 const Player = React.createClass({
 
 	render() {
 
+		const id = this.props.active;
+
 		return (
-			<audio src={this} controls autoplay loop />
+
+			<div className="podcast__player">
+
+				{Number.isInteger(id) ? <audio src={this.props.json[id].mp3} controls autoPlay loop /> : ''}
+
+
+			</div>
 		);
 	}
 
@@ -104,6 +114,7 @@ const App = React.createClass({
 			<div className="podcast">
 				<h1 className="podcast__heading"></h1>
 				<Feed app={this} json={this.props.json} active={this.state.active}/>
+				<Player app={this} json={this.props.json} active={this.state.active}/>
 			</div>
 		);
 
