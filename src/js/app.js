@@ -47,7 +47,7 @@ const Feed = React.createClass({
 
 
 		//
-		// console.log(this.props.app)
+		// console.log(this.props.app);
 
 		return (
 
@@ -55,14 +55,19 @@ const Feed = React.createClass({
 				{
 					this.props.json.map((episode, id) => {
 
+						const active = this.props.active === id;
 						let className = 'podcast__episode';
-						className = this.props.active === id ? `${className} ${className}--active` : className;
+						className = active ? `${className} ${className}--active` : className;
 
 						return (
 							<li className={className}
 								key={id}
 								onClick={this.active.bind(this, id)}>
+
 								<h2>{episode.title}</h2>
+								{console.log(this, id, active)}
+								{active ? <h2>PLAYER!</h2> : ''}
+
 							</li>
 						);
 
@@ -76,23 +81,25 @@ const Feed = React.createClass({
 
 });
 
+// {active ? <Player app={this.props.app} json={this.props.json[id]} json={this.props.json} active={this.state.active}/> : ''}
 // <audio src={this.props.json[id].mp3} controls autoPlay loop />
 
 const Player = React.createClass({
 
 	render() {
 
+		console.log(this.props.app);
+
 		const id = this.props.active;
 
 		return (
-
 			<div className="podcast__player">
 
 				{Number.isInteger(id) ? <audio src={this.props.json[id].mp3} controls autoPlay loop /> : ''}
 
-
 			</div>
 		);
+
 	}
 
 });
@@ -113,8 +120,9 @@ const App = React.createClass({
 		return (
 			<div className="podcast">
 				<h1 className="podcast__heading"></h1>
-				<Feed app={this} json={this.props.json} active={this.state.active}/>
-				<Player app={this} json={this.props.json} active={this.state.active}/>
+				<Feed app={this}
+                      json={this.props.json}
+                      active={this.state.active}/>
 			</div>
 		);
 
@@ -127,6 +135,7 @@ ReactDOM.render(
 	document.getElementById('podcast')
 );
 
+// <Player app={this} json={this.props.json} active={this.state.active}/>
 
 // {
 //
