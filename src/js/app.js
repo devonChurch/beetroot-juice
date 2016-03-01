@@ -33,6 +33,82 @@ const json = [
 	}
 ];
 
+// const svg = (() => {
+//
+// 	const
+//
+// 	item = () => {
+//
+// 		return (
+// 			`<svg class="podcast__icon--item" version="1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+// 				<path d="M0 0h24v24h-24v-24z" fill="none"/>
+// 				<path d="M10 16.5l6-4.5-6-4.5v9zm2-14.5c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10-4.5-10-10-10zm0 19c-5 0-9-4-9-9s4-9 9-9 9 4 9 9-4 9-9 9z"/>
+// 			</svg>`
+// 		);
+//
+// 	},
+//
+// 	play = () => {
+//
+// 		return (
+// 			`<svg class="podcast__icon--play" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+// 				<path d="M8 5v14l11-7z"/>
+// 				<path d="M0 0h24v24h-24z" fill="none"/>
+// 			</svg>`
+// 		);
+//
+// 	},
+//
+// 	pause = () => {
+//
+// 		return (
+// 			`<svg class="podcast__icon--pause" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+// 				<path d="M6 19h4v-14h-4v14zm8-14v14h4v-14h-4z"/>
+// 				<path d="M0 0h24v24h-24z" fill="none"/>
+// 			</svg>`
+// 		);
+//
+// 	},
+//
+// 	forward = () => {
+//
+// 		return (
+// 			`<svg class="podcast__icon--forward" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+// 				<path d="M4 18l8.5-6-8.5-6v12zm9-12v12l8.5-6-8.5-6z"/>
+// 				<path d="M0 0h24v24h-24z" fill="none"/>
+// 			</svg>`
+// 		);
+//
+// 	};
+//
+// 	return {
+// 		item: item(),
+// 		play: play(),
+// 		pause: pause(),
+// 		forward: forward()
+// 	};
+//
+// })();
+
+const svg = {
+
+	create(icon) {
+
+		return (
+			`<svg class="icon--${icon}" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+ 				${this[icon]}
+ 			</svg>`
+		);
+
+	},
+
+	item: '<path d="M10 16.5l6-4.5-6-4.5v9zm2-14.5c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10-4.5-10-10-10zm0 19c-5 0-9-4-9-9s4-9 9-9 9 4 9 9-4 9-9 9z"/>',
+	play: '<path d="M8 5v14l11-7z"/>',
+	pause: '<path d="M6 19h4v-14h-4v14zm8-14v14h4v-14h-4z"/>',
+	forward: '<path d="M4 18l8.5-6-8.5-6v12zm9-12v12l8.5-6-8.5-6z"/>'
+
+};
+
 const Feed = React.createClass({
 
 	active(id) {
@@ -65,7 +141,6 @@ const Feed = React.createClass({
 								onClick={this.active.bind(this, id)}>
 
 								<h2>{episode.title}</h2>
-								{console.log(this, id, active)}
 								{active ? <h2>PLAYER!</h2> : ''}
 
 							</li>
@@ -130,10 +205,10 @@ const App = React.createClass({
 
 });
 
-ReactDOM.render(
-	<App json={json}/>,
-	document.getElementById('podcast')
-);
+// ReactDOM.render(
+// 	<App json={json}/>,
+// 	document.getElementById('podcast')
+// );
 
 // <Player app={this} json={this.props.json} active={this.state.active}/>
 
