@@ -1,0 +1,60 @@
+$space: (
+    tiny: 5px,
+    small: 15px,
+    medium: 30px,
+    large: 60px
+);
+
+@function space($size: medium) {
+    @return map-get($space, $size);
+}
+
+$speed: (
+    slow: 1s,
+    medium: 0.5s,
+    fast: 0.25s
+);
+
+@function speed($type: medium) {
+    @return map-get($speed, $type);
+}
+
+// https://www.google.com/design/spec/style/color.html#color-color-palette
+$color: (
+    teal: (
+        light: #80CBC4,
+        medium: #009688,
+        dark: #004D40
+    ),
+    gray: (
+        light: #cccccc,
+        medium: #989898,
+        dark: #4c4c4c
+    )
+);
+
+$zIndex: (
+    player: 100
+);
+
+@function zIndex($z) {
+    @return map-get($zIndex, $z);
+}
+
+@function color($type, $tint: medium) {
+    $type: map-get($color, $type);
+    @return map-get($type, $tint);
+}
+
+@mixin ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}
+
+@mixin resetButton {
+    background: transparent;
+    border: 0;
+    padding: 0;
+}
