@@ -33,6 +33,125 @@ const json = [
 	}
 ];
 
+const Svg = React.createClass({
+
+	path: {
+		item: 'M10 16.5l6-4.5-6-4.5v9zm2-14.5c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10-4.5-10-10-10zm0 19c-5 0-9-4-9-9s4-9 9-9 9 4 9 9-4 9-9 9z',
+		play: 'M8 5v14l11-7z',
+		pause: 'M6 19h4v-14h-4v14zm8-14v14h4v-14h-4z',
+		skip: 'M4 18l8.5-6-8.5-6v12zm9-12v12l8.5-6-8.5-6z'
+	},
+
+	getIconClass(icon) {
+
+		return `episode__icon icon--${icon}`;
+
+	},
+
+	render() {
+
+		const icon = this.props.icon;
+		const className = this.getIconClass(icon);
+		const path = this.path[icon];
+
+		return (
+			<svg className={className} height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+				<path d={path}/>
+			</svg>
+		);
+
+	}
+
+});
+
+const Player = React.createClass({
+
+	render() {
+
+		return (
+			<div className="player">
+
+				<audio src={this.props.json.mp3} controls autoPlay loop />
+
+			</div>
+		);
+
+	}
+
+});
+
+const App = React.createClass({
+
+
+	getInitialState() {
+
+		return {
+			active: null
+		};
+
+	},
+
+	getEpisodeState(current) {
+
+		const active = this.state.active;
+		const className = 'episode';
+		const modifier = active === null ? '' :
+                         current === active ? `${className}--active` :
+                         current > active ? `${className}--dormantBefore` :
+                         `${className}--dormantAfter`;
+
+		return `${className} ${modifier}`;
+
+	},
+
+	setActiveId(current) {
+
+		this.setState({
+			active: current
+		});
+
+	},
+
+	render() {
+
+		return (
+
+			<ul className="episodes__list">
+				{
+					this.props.json.map((episode, current) => {
+
+						const state = this.getEpisodeState(current);
+
+						return (
+							<li className={state}
+								key={current}
+								onClick={this.setActiveId.bind(this, current)}>
+								<a className="episode__link">
+									<Svg icon={'item'}/>
+									<h2 className="episode__title">{episode.title}</h2>
+									<span className="episode__date">12 February 2016</span>
+									<p className="episode__description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+								</a>
+								{this.state.active === current ? <Player json={this.props.json[current]}/> : ''}
+							</li>
+
+						);
+
+					})
+				}
+			</ul>
+
+		);
+
+	}
+
+});
+
+ReactDOM.render(
+	<App json={json}/>,
+	document.getElementById('episodes')
+);
+
 // const svg = (() => {
 //
 // 	const
@@ -90,125 +209,81 @@ const json = [
 //
 // })();
 
-const svg = {
+// const svg = {
+//
+// 	create(icon) {
+//
+// 		return (
+// 			`<svg class="episode__icon icon--${icon}" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+//  				${this[icon]}
+//  			</svg>`
+// 		);
+//
+// 	},
+//
+// 	item: '<path d="M10 16.5l6-4.5-6-4.5v9zm2-14.5c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10-4.5-10-10-10zm0 19c-5 0-9-4-9-9s4-9 9-9 9 4 9 9-4 9-9 9z"/>',
+// 	play: '<path d="M8 5v14l11-7z"/>',
+// 	pause: '<path d="M6 19h4v-14h-4v14zm8-14v14h4v-14h-4z"/>',
+// 	skip: '<path d="M4 18l8.5-6-8.5-6v12zm9-12v12l8.5-6-8.5-6z"/>'
+//
+// };
 
-	create(icon) {
-
-		return (
-			`<svg class="icon--${icon}" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
- 				${this[icon]}
- 			</svg>`
-		);
-
-	},
-
-	item: '<path d="M10 16.5l6-4.5-6-4.5v9zm2-14.5c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10-4.5-10-10-10zm0 19c-5 0-9-4-9-9s4-9 9-9 9 4 9 9-4 9-9 9z"/>',
-	play: '<path d="M8 5v14l11-7z"/>',
-	pause: '<path d="M6 19h4v-14h-4v14zm8-14v14h4v-14h-4z"/>',
-	skip: '<path d="M4 18l8.5-6-8.5-6v12zm9-12v12l8.5-6-8.5-6z"/>'
-
-};
-
-const Feed = React.createClass({
-
-	active(id) {
-
-		this.props.app.setState({
-			active: id
-		});
-
-	},
-
-	render() {
-
-
-		//
-		// console.log(this.props.app);
-
-		return (
-
-			<ul className="podcast__feed">
-				{
-					this.props.json.map((episode, id) => {
-
-						const active = this.props.active === id;
-						let className = 'podcast__episode';
-						className = active ? `${className} ${className}--active` : className;
-
-						return (
-							<li className={className}
-								key={id}
-								onClick={this.active.bind(this, id)}>
-
-								<h2>{episode.title}</h2>
-								{active ? <h2>PLAYER!</h2> : ''}
-
-							</li>
-						);
-
-					})
-				}
-			</ul>
-
-		);
-
-	}
-
-});
+// const Feed = React.createClass({
+//
+// 	active(id) {
+//
+// 		this.props.app.setState({
+// 			active: id
+// 		});
+//
+// 	},
+//
+// 	render() {
+//
+//
+// 		//
+// 		// console.log(this.props.app);
+//
+// 		return (
+//
+// 			<ul className="podcast__feed">
+// 				{
+// 					this.props.json.map((episode, id) => {
+//
+// 						const active = this.props.active === id;
+// 						let className = 'podcast__episode';
+// 						className = active ? `${className} ${className}--active` : className;
+//
+// 						return (
+// 							<li className={className}
+// 								key={id}
+// 								onClick={this.active.bind(this, id)}>
+//
+// 								<h2>{episode.title}</h2>
+// 								{active ? <h2>PLAYER!</h2> : ''}
+//
+// 							</li>
+// 						);
+//
+// 					})
+// 				}
+// 			</ul>
+//
+// 		);
+//
+// 	}
+//
+// });
 
 // {active ? <Player app={this.props.app} json={this.props.json[id]} json={this.props.json} active={this.state.active}/> : ''}
 // <audio src={this.props.json[id].mp3} controls autoPlay loop />
 
-const Player = React.createClass({
-
-	render() {
-
-		console.log(this.props.app);
-
-		const id = this.props.active;
-
-		return (
-			<div className="podcast__player">
-
-				{Number.isInteger(id) ? <audio src={this.props.json[id].mp3} controls autoPlay loop /> : ''}
-
-			</div>
-		);
-
-	}
-
-});
-
-const App = React.createClass({
-
-
-	getInitialState() {
-
-		return {
-			active: null
-		};
-
-	},
-
-	render() {
-
-		return (
-			<div className="podcast">
-				<h1 className="podcast__heading"></h1>
-				<Feed app={this}
-                      json={this.props.json}
-                      active={this.state.active}/>
-			</div>
-		);
-
-	}
-
-});
-
-// ReactDOM.render(
-// 	<App json={json}/>,
-// 	document.getElementById('podcast')
-// );
+// <div className="podcast">
+// 	<h1 className="podcast__heading"></h1>
+// 	<Feed app={this}
+//           json={this.props.json}
+//           active={this.state.active}/>
+// </div>
 
 // <Player app={this} json={this.props.json} active={this.state.active}/>
 

@@ -5,8 +5,8 @@ $space: (
     large: 60px
 );
 
-@function space($size: medium) {
-    @return map-get($space, $size);
+@function space($type: medium) {
+    @return map-get($space, $type);
 }
 
 $speed: (
@@ -17,6 +17,14 @@ $speed: (
 
 @function speed($type: medium) {
     @return map-get($speed, $type);
+}
+
+$ease: (
+    out: ease-out
+);
+
+@function ease($type: out) {
+    @return map-get($ease, $type);
 }
 
 // https://www.google.com/design/spec/style/color.html#color-color-palette
@@ -37,8 +45,8 @@ $zIndex: (
     player: 100
 );
 
-@function zIndex($z) {
-    @return map-get($zIndex, $z);
+@function zIndex($type) {
+    @return map-get($zIndex, $type);
 }
 
 @function color($type, $tint: medium) {
