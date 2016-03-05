@@ -67,16 +67,10 @@ const Player = React.createClass({
 
 	componentDidMount() {
 
-		console.log('PLAYER  HAS RENDERED');
-		console.log(ReactDOM.findDOMNode(this));
-
 		const player = ReactDOM.findDOMNode(this);
 
 		this.positionPing(player);
 		this.activatePlayer(player);
-
-		// ReactDOM.findDOMNode(instance)
-		// var el = $(this.getDOMNode());
 
 	},
 
@@ -85,19 +79,11 @@ const Player = React.createClass({
 		const background = player.getElementsByClassName('player__background')[0]; // .getBoundingClientRect();
 		const bounds = background.getBoundingClientRect();
 		const cursor = this.props.cursor;
-
-		console.log(background.style.transform);
-		console.log(cursor.left, cursor.top);
-		console.log(bounds.left, bounds.top);
-
 		const x = cursor.left;
 		const y = cursor.top - bounds.top;
 
-		// background.style.transform = `translate(${x}px, ${y}px)`;
 		background.style.left = `${x}px`;
 		background.style.top = `${y}px`;
-
-		console.log(x, y);
 
 	},
 
@@ -144,7 +130,6 @@ const Player = React.createClass({
 
 const App = React.createClass({
 
-
 	getInitialState() {
 
 		return {
@@ -169,39 +154,21 @@ const App = React.createClass({
 
 	activateEpisode(current, e) {
 
-		// console.log('current', current);
-		// console.log('e', e);
-
 		this.setState({
 			active: current,
 			cursor: this.cursorLocation(e)
 		});
 
-		// this.cursorLocation(e);
-		// this.setActiveId(current);
-
 	},
 
 	cursorLocation(e) {
 
-		const left = e.clientX; // + document.body.scrollLeft;
-		const top = e.clientY; // + document.body.scrollTop;
+		const left = e.clientX;
+		const top = e.clientY;
 
-		// console.log(x, y);
-		// console.log(this.props);
-
-		// this.props.cursor = {x, y};
 		return {left, top};
 
 	},
-
-	// setActiveId(current) {
-	//
-	// 	this.setState({
-	// 		active: current
-	// 	});
-	//
-	// },
 
 	render() {
 

@@ -90,17 +90,37 @@
     transform: translateY(-50%) translateZ(0);
     z-index: zIndex(player);
 
+    > *:not(.player__background) {
+        opacity: 0;
+        transform: translateX(space());
+        transition: speed(fast) ease();
+        transition-property: opacity transform;
+    }
+
     &.player--active {
 
         .player__background {
             transform: scale(1);
+        }
+
+        > * {
+            opacity: 1;
+            transform: translateX(0);
+
+            // Do not target .player__background.
+            @for $i from 2 through 4 {
+
+                &:nth-child(#{$i}) {
+                    transition-delay: delay(fast) * ($i - 1);
+                }
+            }
         }
     }
 
     &.player--dormant {
         opacity: 0;
 
-        // & > *:not(.player__background) {
+        // > *:not(.player__background) {
         //     opacity: 0;
         // }
     }
