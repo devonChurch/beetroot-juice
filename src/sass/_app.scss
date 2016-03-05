@@ -1,12 +1,12 @@
 .podcast {
-    border: 1px solid gray;
+    // border: 1px solid gray;
     font: {
         family: 'Roboto', sans-serif;
         size: 16px;
         weight: 300;
     }
-    max-height: 667px;
-    max-width: 375px;
+    // max-height: 667px;
+    // max-width: 375px;
 }
 
 .episodes {
@@ -80,15 +80,55 @@
 }
 
 .player {
-    background: color(teal);
     color: white;
     left: 0;
+    overflow: hidden;
     padding: space() space() space(small);
     position: absolute;
     right: 0;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-50%) translateZ(0);
     z-index: zIndex(player);
+
+    &.player--active {
+
+        .player__background {
+            transform: scale(1);
+        }
+    }
+
+    &.player--dormant {
+        opacity: 0;
+
+        // & > *:not(.player__background) {
+        //     opacity: 0;
+        // }
+    }
+
+    &__background {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        transform: scale(0);
+        transform-origin: left top;
+        transition: transform speed() ease();
+        width: 100%;
+
+        &:before {
+            background: color(teal);
+            border-radius: 50%;
+            content: '';
+            display: block;
+            height: 0;
+            padding-top: 216%;
+            left: 0;
+            position: absolute;
+            top: 0;
+            transform: translate(-50%, -50%);
+            width: 216%;
+        }
+    }
 
     &__title {
         @include ellipsis;
@@ -110,16 +150,16 @@
     &__button {
         @include resetButton;
         cursor: pointer;
+
+        &--back {
+            transform: rotate(180deg);
+        }
     }
 
     &__icon {
         fill: white;
         height: space();
         width: space();
-
-        .player__button--back & {
-            transform: rotate(180deg);
-        }
     }
 
     &__time {

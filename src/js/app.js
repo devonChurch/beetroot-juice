@@ -42,17 +42,16 @@ const Svg = React.createClass({
 		skip: 'M4 18l8.5-6-8.5-6v12zm9-12v12l8.5-6-8.5-6z'
 	},
 
-	getIconClass(icon) {
+	getIconClass() {
 
-		return `episode__icon icon--${icon}`;
+		return `${this.props.component}__icon icon--${this.props.icon}`;
 
 	},
 
 	render() {
 
-		const icon = this.props.icon;
-		const className = this.getIconClass(icon);
-		const path = this.path[icon];
+		const className = this.getIconClass();
+		const path = this.path[this.props.icon];
 
 		return (
 			<svg className={className} height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -66,13 +65,76 @@ const Svg = React.createClass({
 
 const Player = React.createClass({
 
+	componentDidMount() {
+
+		console.log('PLAYER  HAS RENDERED');
+		console.log(ReactDOM.findDOMNode(this));
+
+		const player = ReactDOM.findDOMNode(this);
+
+		this.positionPing(player);
+		this.activatePlayer(player);
+
+		// ReactDOM.findDOMNode(instance)
+		// var el = $(this.getDOMNode());
+
+	},
+
+	positionPing(player) {
+
+		const background = player.getElementsByClassName('player__background')[0]; // .getBoundingClientRect();
+		const bounds = background.getBoundingClientRect();
+		const cursor = this.props.cursor;
+
+		console.log(background.style.transform);
+		console.log(cursor.left, cursor.top);
+		console.log(bounds.left, bounds.top);
+
+		const x = cursor.left;
+		const y = cursor.top - bounds.top;
+
+		// background.style.transform = `translate(${x}px, ${y}px)`;
+		background.style.left = `${x}px`;
+		background.style.top = `${y}px`;
+
+		console.log(x, y);
+
+	},
+
+	activatePlayer(player) {
+
+		setTimeout(() => player.classList.add('player--active'), 0);
+
+	},
+
 	render() {
 
 		return (
 			<div className="player">
-
-				<audio src={this.props.json.mp3} controls autoPlay loop />
-
+				<div className="player__background"></div>
+				<h3 className="player__title">{this.props.json.title}</h3>
+				<ul className="player__controls">
+					<li className="player__control">
+						<button className="player__button player__button--back" type="button" name="Skip forward">
+							<Svg component={'player'} icon={'skip'}/>
+						</button>
+					</li>
+					<li className="player__control">
+						<button className="player__button player__button--play" type="button" name="Play">
+							<Svg component={'player'} icon={'play'}/>
+						</button>
+					</li>
+					<li className="player__control">
+						<button className="player__button player__button--forward" type="button" name="Skip back">
+							<Svg component={'player'} icon={'skip'}/>
+						</button>
+					</li>
+				</ul>
+				<div className="player__time">
+					<progress className="player__progress" max="100" value="80"></progress>
+					<span className="player__elapsed">12.45</span>
+					<span className="player__total">34.27</span>
+				</div>
 			</div>
 		);
 
@@ -86,7 +148,8 @@ const App = React.createClass({
 	getInitialState() {
 
 		return {
-			active: null
+			active: null,
+			cursor: {left: null, top: null}
 		};
 
 	},
@@ -104,13 +167,41 @@ const App = React.createClass({
 
 	},
 
-	setActiveId(current) {
+	activateEpisode(current, e) {
+
+		// console.log('current', current);
+		// console.log('e', e);
 
 		this.setState({
-			active: current
+			active: current,
+			cursor: this.cursorLocation(e)
 		});
 
+		// this.cursorLocation(e);
+		// this.setActiveId(current);
+
 	},
+
+	cursorLocation(e) {
+
+		const left = e.clientX; // + document.body.scrollLeft;
+		const top = e.clientY; // + document.body.scrollTop;
+
+		// console.log(x, y);
+		// console.log(this.props);
+
+		// this.props.cursor = {x, y};
+		return {left, top};
+
+	},
+
+	// setActiveId(current) {
+	//
+	// 	this.setState({
+	// 		active: current
+	// 	});
+	//
+	// },
 
 	render() {
 
@@ -125,14 +216,14 @@ const App = React.createClass({
 						return (
 							<li className={state}
 								key={current}
-								onClick={this.setActiveId.bind(this, current)}>
+								onClick={this.activateEpisode.bind(this, current)}>
 								<a className="episode__link">
-									<Svg icon={'item'}/>
+									<Svg component={'episode'} icon={'item'}/>
 									<h2 className="episode__title">{episode.title}</h2>
 									<span className="episode__date">12 February 2016</span>
 									<p className="episode__description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 								</a>
-								{this.state.active === current ? <Player json={this.props.json[current]}/> : ''}
+								{this.state.active === current ? <Player json={this.props.json[current]} cursor={this.state.cursor}/> : ''}
 							</li>
 
 						);
@@ -151,6 +242,14 @@ ReactDOM.render(
 	<App json={json}/>,
 	document.getElementById('episodes')
 );
+
+
+
+// <div className="player">
+//
+// 	<audio src={this.props.json.mp3} controls autoPlay loop />
+//
+// </div>
 
 // const svg = (() => {
 //
