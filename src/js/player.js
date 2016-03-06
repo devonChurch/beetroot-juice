@@ -3,14 +3,13 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const Svg = require('./svg');
+const timer = require('./timer');
 
 console.log('PLAYER');
 
 module.exports = React.createClass({
 
 	getInitialState() {
-
-		console.log('initial state');
 
 		return {
 			track: this.loadTrack(),
@@ -21,9 +20,8 @@ module.exports = React.createClass({
 
 	componentWillMount() {
 
-		console.log('WILL mount');
-
 		this.trackPhase('play');
+		this.elapsedTime();
 
 	},
 
@@ -49,11 +47,11 @@ module.exports = React.createClass({
 
 	},
 
-	//  track.addEventListener('timeupdate', function () {
+	elapsedTime() {
 
-	// 	duration.setCurrent();
-	//
-	// });
+		this.state.track.addEventListener('timeupdate', () => this.forceUpdate());
+
+	},
 
 	trackPhase(phase) {
 
@@ -94,6 +92,9 @@ module.exports = React.createClass({
 
 	render() {
 
+		const duration = this.state.track.duration;
+		const elapsed = this.state.track.currentTime;
+
 		return (
 			<div className="player">
 				<div className="player__background"></div>
@@ -110,7 +111,6 @@ module.exports = React.createClass({
 							(() => {
 
 								const phase = this.state.phase;
-								console.log('rending phase icon', phase);
 								const className = `player__button player__button--${phase}`;
 
 								return (
@@ -130,9 +130,9 @@ module.exports = React.createClass({
 					</li>
 				</ul>
 				<div className="player__time">
-					<progress className="player__progress" max="100" value="80"></progress>
-					<span className="player__elapsed">12.45</span>
-					<span className="player__total">34.27</span>
+					<progress className="player__progress" max={duration} value={elapsed}></progress>
+					<span className="player__elapsed">{timer.generate(elapsed) || '0:00'}</span>
+					<span className="player__total">{timer.generate(duration) || '0:00'}</span>
 				</div>
 			</div>
 		);
