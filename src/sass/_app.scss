@@ -92,7 +92,7 @@
 
     > *:not(.player__background) {
         opacity: 0;
-        transform: translateX(space());
+        transform: translateX(space(small));
         transition: speed(fast) ease();
         transition-property: opacity transform;
     }

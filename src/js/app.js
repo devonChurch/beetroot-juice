@@ -65,18 +65,59 @@ const Svg = React.createClass({
 
 const Player = React.createClass({
 
+	getInitialState() {
+
+		return {
+			track: this.loadTrack(),
+			phase: 'play'
+		};
+
+	},
+
 	componentDidMount() {
 
 		const player = ReactDOM.findDOMNode(this);
 
 		this.positionPing(player);
 		this.activatePlayer(player);
+		this.trackPhase('play');
+
+	},
+
+	componentWillUnmount() {
+
+		// Stops auto from continuing to play when player is no longer relevant.
+		this.trackPhase('stop');
+
+	},
+
+	loadTrack() {
+
+		return new Audio(this.props.json.mp3);
+
+	},
+
+	trackPhase(phase) {
+
+		const action = phase === 'play' ? 'play' : 'pause';
+
+		this.state.track[action]();
+		if (phase === 'stop') this.state.track.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAVFYAAFRWAAABAAgAZGF0YQAAAAA=';
+		this.setState({phase: phase});
+
+	},
+
+	togglePhase() {
+
+		const phase = this.state.phase === 'play' ? 'pause' : 'play';
+
+		this.trackPhase(phase);
 
 	},
 
 	positionPing(player) {
 
-		const background = player.getElementsByClassName('player__background')[0]; // .getBoundingClientRect();
+		const background = player.getElementsByClassName('player__background')[0];
 		const bounds = background.getBoundingClientRect();
 		const cursor = this.props.cursor;
 		const x = cursor.left;
@@ -101,17 +142,30 @@ const Player = React.createClass({
 				<h3 className="player__title">{this.props.json.title}</h3>
 				<ul className="player__controls">
 					<li className="player__control">
-						<button className="player__button player__button--back" type="button" name="Skip forward">
+						<button className="player__button player__button--back" type="button" name="skip forward">
 							<Svg component={'player'} icon={'skip'}/>
 						</button>
 					</li>
 					<li className="player__control">
-						<button className="player__button player__button--play" type="button" name="Play">
-							<Svg component={'player'} icon={'play'}/>
-						</button>
+						{
+
+							(() => {
+
+								const phase = this.state.phase;
+								const className = `player__button player__button--${phase}`;
+
+								return (
+									<button onClick={this.togglePhase} className={className} type="button" name={phase}>
+										<Svg component={'player'} icon={phase}/>
+									</button>
+								);
+
+							})()
+
+						}
 					</li>
 					<li className="player__control">
-						<button className="player__button player__button--forward" type="button" name="Skip back">
+						<button className="player__button player__button--forward" type="button" name="skip back">
 							<Svg component={'player'} icon={'skip'}/>
 						</button>
 					</li>
@@ -176,14 +230,13 @@ const App = React.createClass({
 
 			<ul className="episodes__list">
 				{
+
 					this.props.json.map((episode, current) => {
 
 						const state = this.getEpisodeState(current);
 
 						return (
-							<li className={state}
-								key={current}
-								onClick={this.activateEpisode.bind(this, current)}>
+							<li className={state} key={current} onClick={this.activateEpisode.bind(this, current)}>
 								<a className="episode__link">
 									<Svg component={'episode'} icon={'item'}/>
 									<h2 className="episode__title">{episode.title}</h2>
@@ -196,6 +249,7 @@ const App = React.createClass({
 						);
 
 					})
+
 				}
 			</ul>
 
