@@ -12,6 +12,7 @@ module.exports = {
 	 */
 	generate(time) {
 
+		time = isNaN(time) ? 0 : time;
 		const hours = Math.floor(time / (1 * 60 * 60));
 		time = time % (1 * 60 * 60);
 		const minutes = Math.floor(time / (1 * 60));

@@ -13,7 +13,8 @@ module.exports = React.createClass({
 
 		return {
 			track: this.loadTrack(),
-			phase: 'play'
+			phase: 'play',
+			elapsed: 0
 		};
 
 	},
@@ -49,7 +50,18 @@ module.exports = React.createClass({
 
 	elapsedTime() {
 
-		this.state.track.addEventListener('timeupdate', () => this.forceUpdate());
+		this.state.track.addEventListener('timeupdate', () => this.setState({elapsed: this.state.track.currentTime}));
+
+	},
+
+	skippedElapsed(direction) {
+
+		const duration = this.state.track.duration;
+		const current = this.state.track.currentTime;
+		const offset = 30;
+		let elapsed = direction === 'forward' ? current + offset : current - offset;
+
+		this.state.track.currentTime = elapsed < 0 ? 0 : elapsed > duration ? duration : elapsed;
 
 	},
 
@@ -101,7 +113,7 @@ module.exports = React.createClass({
 				<h3 className="player__title">{this.props.json.title}</h3>
 				<ul className="player__controls">
 					<li className="player__control">
-						<button className="player__button player__button--back" type="button" name="skip forward">
+						<button onMouseDown={this.skippedElapsed.bind(this, 'back')} className="player__button player__button--back" type="button" name="skip back">
 							<Svg component={'player'} icon={'skip'}/>
 						</button>
 					</li>
@@ -124,15 +136,15 @@ module.exports = React.createClass({
 						}
 					</li>
 					<li className="player__control">
-						<button className="player__button player__button--forward" type="button" name="skip back">
+						<button onMouseDown={this.skippedElapsed.bind(this, 'forward')} className="player__button player__button--forward" type="button" name="skip forward">
 							<Svg component={'player'} icon={'skip'}/>
 						</button>
 					</li>
 				</ul>
 				<div className="player__time">
 					<progress className="player__progress" max={duration} value={elapsed}></progress>
-					<span className="player__elapsed">{timer.generate(elapsed) || '0:00'}</span>
-					<span className="player__total">{timer.generate(duration) || '0:00'}</span>
+					<span className="player__elapsed">{timer.generate(elapsed)}</span>
+					<span className="player__total">{timer.generate(duration)}</span>
 				</div>
 			</div>
 		);
