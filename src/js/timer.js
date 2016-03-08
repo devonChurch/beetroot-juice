@@ -12,7 +12,6 @@ module.exports = {
 	 */
 	generate(time) {
 
-		time = isNaN(time) ? 0 : time;
 		const hours = Math.floor(time / (1 * 60 * 60));
 		time = time % (1 * 60 * 60);
 		const minutes = Math.floor(time / (1 * 60));
@@ -21,6 +20,12 @@ module.exports = {
 		const units = this.queryUnits(format);
 
 		return `${format} ${units}`;
+
+	},
+
+	forceToNumber(time) {
+
+		return isNaN(time) ? 0 : time;
 
 	},
 

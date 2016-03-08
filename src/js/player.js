@@ -32,6 +32,7 @@ module.exports = React.createClass({
 
 		this.positionPing(player);
 		this.activatePlayer(player);
+		window.addEventListener('scroll', this.queryFixation);
 
 	},
 
@@ -39,6 +40,9 @@ module.exports = React.createClass({
 
 		// Stops auto from continuing to play when player is no longer relevant.
 		this.trackPhase('stop');
+
+		window.removeEventListener('scroll', this.queryFixation);
+		this.state.track.removeEventListener('timeupdate', this.updateElapsed);
 
 	},
 
@@ -50,7 +54,13 @@ module.exports = React.createClass({
 
 	elapsedTime() {
 
-		this.state.track.addEventListener('timeupdate', () => this.setState({elapsed: this.state.track.currentTime}));
+		this.state.track.addEventListener('timeupdate', this.updateElapsed);
+
+	},
+
+	updateElapsed() {
+
+		this.setState({elapsed: this.state.track.currentTime});
 
 	},
 
@@ -70,7 +80,7 @@ module.exports = React.createClass({
 		const action = phase === 'play' ? 'play' : 'pause';
 
 		this.state.track[action]();
-		if (phase === 'stop') this.state.track.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAVFYAAFRWAAABAAgAZGF0YQAAAAA=';
+		if (phase === 'stop') this.state.track.src = ''; // 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAVFYAAFRWAAABAAgAZGF0YQAAAAA=';
 		this.setState({phase: phase});
 
 	},
@@ -102,49 +112,62 @@ module.exports = React.createClass({
 
 	},
 
+	queryFixation() {
+
+		const player = ReactDOM.findDOMNode(this);
+		const y = player.getBoundingClientRect().top;
+		const state = y <= 0 ? 'top' : y + 140 >= window.innerHeight ? 'bottom' : null;
+
+		if (state) player.setAttribute('data-fixed', state);
+		else player.removeAttribute('data-fixed');
+
+	},
+
 	render() {
 
-		const duration = this.state.track.duration;
-		const elapsed = this.state.track.currentTime;
+		const duration = timer.forceToNumber(this.state.track.duration);
+		const elapsed = timer.forceToNumber(this.state.track.currentTime);
 
 		return (
 			<div className="player">
-				<div className="player__background"></div>
-				<h3 className="player__title">{this.props.json.title}</h3>
-				<ul className="player__controls">
-					<li className="player__control">
-						<button onMouseDown={this.skippedElapsed.bind(this, 'back')} className="player__button player__button--back" type="button" name="skip back">
-							<Svg component={'player'} icon={'skip'}/>
-						</button>
-					</li>
-					<li className="player__control">
-						{
+				<div className="player__wrapper">
+					<div className="player__background"></div>
+					<h3 className="player__title">{this.props.json.title}</h3>
+					<ul className="player__controls">
+						<li className="player__control">
+							<button onMouseDown={this.skippedElapsed.bind(this, 'back')} className="player__button player__button--back" type="button" name="skip back">
+								<Svg component={'player'} icon={'skip'}/>
+							</button>
+						</li>
+						<li className="player__control">
+							{
 
-							(() => {
+								(() => {
 
-								const phase = this.state.phase;
-								const className = `player__button player__button--${phase}`;
+									const phase = this.state.phase;
+									const className = `player__button player__button--${phase}`;
 
-								return (
-									<button onClick={this.togglePhase} className={className} type="button" name={phase}>
-										<Svg component={'player'} icon={phase}/>
-									</button>
-								);
+									return (
+										<button onClick={this.togglePhase} className={className} type="button" name={phase}>
+											<Svg component={'player'} icon={phase}/>
+										</button>
+									);
 
-							})()
+								})()
 
-						}
-					</li>
-					<li className="player__control">
-						<button onMouseDown={this.skippedElapsed.bind(this, 'forward')} className="player__button player__button--forward" type="button" name="skip forward">
-							<Svg component={'player'} icon={'skip'}/>
-						</button>
-					</li>
-				</ul>
-				<div className="player__time">
-					<progress className="player__progress" max={duration} value={elapsed}></progress>
-					<span className="player__elapsed">{timer.generate(elapsed)}</span>
-					<span className="player__total">{timer.generate(duration)}</span>
+							}
+						</li>
+						<li className="player__control">
+							<button onMouseDown={this.skippedElapsed.bind(this, 'forward')} className="player__button player__button--forward" type="button" name="skip forward">
+								<Svg component={'player'} icon={'skip'}/>
+							</button>
+						</li>
+					</ul>
+					<div className="player__time">
+						<progress className="player__progress" max={duration} value={elapsed}></progress>
+						<span className="player__elapsed">{timer.generate(elapsed)}</span>
+						<span className="player__total">{timer.generate(duration)}</span>
+					</div>
 				</div>
 			</div>
 		);
