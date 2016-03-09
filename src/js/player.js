@@ -22,7 +22,6 @@ module.exports = React.createClass({
 	componentWillMount() {
 
 		this.trackPhase('play');
-		this.elapsedTime();
 
 	},
 
@@ -32,7 +31,8 @@ module.exports = React.createClass({
 
 		this.positionPing(player);
 		this.activatePlayer(player);
-		window.addEventListener('scroll', this.queryFixation);
+
+		this.listeners('on');
 
 	},
 
@@ -40,21 +40,23 @@ module.exports = React.createClass({
 
 		// Stops auto from continuing to play when player is no longer relevant.
 		this.trackPhase('stop');
+		// Remove redundant listeners from listening / firing.
+		this.listeners('off');
 
-		window.removeEventListener('scroll', this.queryFixation);
-		this.state.track.removeEventListener('timeupdate', this.updateElapsed);
+	},
+
+	listeners(action) {
+
+		action = action === 'on' ? 'addEventListener' : 'removeEventListener';
+
+		this.state.track[action]('timeupdate', this.updateElapsed);
+		window[action]('scroll', this.queryFixation);
 
 	},
 
 	loadTrack() {
 
 		return new Audio(this.props.json.mp3);
-
-	},
-
-	elapsedTime() {
-
-		this.state.track.addEventListener('timeupdate', this.updateElapsed);
 
 	},
 
