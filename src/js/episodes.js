@@ -2,6 +2,7 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
+const date = require('./date');
 const Svg = require('./svg');
 const Player = require('./player');
 
@@ -67,7 +68,7 @@ module.exports = React.createClass({
 								<a className="episode__link" href="#" onClick={this.activateEpisode.bind(this, current)}>
 									<Svg component={'episode'} icon={'item'}/>
 									<h2 className="episode__title">{episode.title}</h2>
-									<span className="episode__date">{episode.date}</span>
+									<span className="episode__date">{date.generate(episode.date)}</span>
 									<p className="episode__description">{episode.desc}</p>
 								</a>
 								{this.state.active === current ? <Player json={this.props.json[current]} cursor={this.state.cursor}/> : ''}
