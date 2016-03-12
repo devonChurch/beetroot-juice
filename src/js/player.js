@@ -5,8 +5,6 @@ const ReactDOM = require('react-dom');
 const Svg = require('./svg');
 const timer = require('./timer');
 
-console.log('PLAYER');
-
 module.exports = React.createClass({
 
 	getInitialState() {

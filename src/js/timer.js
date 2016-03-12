@@ -1,7 +1,5 @@
 'use strict';
 
-console.log('TIMER');
-
 module.exports = {
 
 	generate(time) {

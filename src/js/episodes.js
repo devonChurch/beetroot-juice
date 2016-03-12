@@ -6,8 +6,6 @@ const date = require('./date');
 const Svg = require('./svg');
 const Player = require('./player');
 
-console.log('EPISODES');
-
 module.exports = React.createClass({
 
 	getInitialState() {
@@ -33,8 +31,6 @@ module.exports = React.createClass({
 	},
 
 	getListState() {
-
-		console.log(this.state.active);
 
 		const className = 'episodes__list';
 		const modifier = this.state.active === null ? `${className}--dormant` : `${className}--expanded`;

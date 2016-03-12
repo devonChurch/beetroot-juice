@@ -1,7 +1,5 @@
 'use strict';
 
-console.log('DATE');
-
 module.exports = {
 
 	generate(date) {
