@@ -32,6 +32,17 @@ module.exports = React.createClass({
 
 	},
 
+	getListState() {
+
+		console.log(this.state.active);
+
+		const className = 'episodes__list';
+		const modifier = this.state.active === null ? `${className}--dormant` : `${className}--expanded`;
+
+		return `${className} ${modifier}`;
+
+	},
+
 	activateEpisode(current, e) {
 
 		this.setState({
@@ -54,17 +65,19 @@ module.exports = React.createClass({
 
 	render() {
 
+		const listState = this.getListState();
+
 		return (
 
-			<ul className="episodes__list">
+			<ul className={listState}>
 				{
 
 					this.props.json.map((episode, current) => {
 
-						const state = this.getEpisodeState(current);
+						const episodeState = this.getEpisodeState(current);
 
 						return (
-							<li className={state} key={current}>
+							<li className={episodeState} key={current}>
 								<a className="episode__link" href="#" onClick={this.activateEpisode.bind(this, current)}>
 									<Svg component={'episode'} icon={'item'}/>
 									<h2 className="episode__title">{episode.title}</h2>

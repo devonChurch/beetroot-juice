@@ -132,43 +132,45 @@ module.exports = React.createClass({
 
 		return (
 			<div className="player">
-				<div className="player__wrapper">
-					<div className="player__background"></div>
-					<h3 className="player__title">{this.props.json.title}</h3>
-					<ul className="player__controls">
-						<li className="player__control">
-							<button onMouseDown={this.skippedElapsed.bind(this, 'back')} className="player__button player__button--back" type="button" name="skip back">
-								<Svg component={'player'} icon={'skip'}/>
-							</button>
-						</li>
-						<li className="player__control">
-							{
+				<div className="player__fixed">
+					<div className="player__wrapper">
+						<div className="player__background"></div>
+						<h3 className="player__title">{this.props.json.title}</h3>
+						<ul className="player__controls">
+							<li className="player__control">
+								<button onMouseDown={this.skippedElapsed.bind(this, 'back')} className="player__button player__button--back" type="button" name="skip back">
+									<Svg component={'player'} icon={'skip'}/>
+								</button>
+							</li>
+							<li className="player__control">
+								{
 
-								(() => {
+									(() => {
 
-									const phase = this.state.phase;
-									const className = `player__button player__button--${phase}`;
+										const phase = this.state.phase;
+										const className = `player__button player__button--${phase}`;
 
-									return (
-										<button onClick={this.togglePhase} className={className} type="button" name={phase}>
-											<Svg component={'player'} icon={phase}/>
-										</button>
-									);
+										return (
+											<button onClick={this.togglePhase} className={className} type="button" name={phase}>
+												<Svg component={'player'} icon={phase}/>
+											</button>
+										);
 
-								})()
+									})()
 
-							}
-						</li>
-						<li className="player__control">
-							<button onMouseDown={this.skippedElapsed.bind(this, 'forward')} className="player__button player__button--forward" type="button" name="skip forward">
-								<Svg component={'player'} icon={'skip'}/>
-							</button>
-						</li>
-					</ul>
-					<div className="player__time">
-						<progress className="player__progress" max={duration} value={elapsed}></progress>
-						<span className="player__elapsed">{timer.generate(elapsed)}</span>
-						<span className="player__total">{timer.generate(duration)}</span>
+								}
+							</li>
+							<li className="player__control">
+								<button onMouseDown={this.skippedElapsed.bind(this, 'forward')} className="player__button player__button--forward" type="button" name="skip forward">
+									<Svg component={'player'} icon={'skip'}/>
+								</button>
+							</li>
+						</ul>
+						<div className="player__time">
+							<progress className="player__progress" max={duration} value={elapsed}></progress>
+							<span className="player__elapsed">{timer.generate(elapsed)}</span>
+							<span className="player__total">{timer.generate(duration)}</span>
+						</div>
 					</div>
 				</div>
 			</div>
