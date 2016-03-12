@@ -1,0 +1,61 @@
+@mixin ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}
+
+@mixin resetButton {
+    background: transparent;
+    border: 0;
+    padding: 0;
+}
+
+@mixin generateCap($location) {
+    $height: space(tiny);
+    position: relative;
+    z-index: zIndex(cap);
+
+    &:before,
+    &:after {
+        content: '';
+        display: block;
+        left: 0;
+        position: absolute;
+        width: 100%;
+    }
+
+    &:before {
+        border-radius: 10%;
+        box-shadow: 0 0 20px black;
+        height: 100%;
+        top: 0;
+        z-index: zIndex(cap) - 1;
+    }
+
+    &:after {
+        background: color(teal, dark);
+        height: $height;
+        z-index: zIndex(cap) + 2;
+
+        @if $location == header {
+            bottom: 0;
+        } @else {
+            top: 0;
+        }
+    }
+
+    .#{$location}__wrapper {
+        background: color(teal);
+        color: white;
+        padding: space();
+        position: relative;
+        z-index: zIndex(cap) + 1;
+
+        @if $location == header {
+            padding-bottom: space() + $height;
+        } @else {
+            padding-top: space() + $height;
+        }
+    }
+}
