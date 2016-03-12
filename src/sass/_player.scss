@@ -172,6 +172,19 @@
         flex-basis: 100%;
         height: 2px;
         margin: space(tiny) 0;
+        position: relative;
+
+        // Add an increased vertical hit box to the thin progress bar.
+        &:before {
+            $offset: -5px;
+            bottom: $offset;
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: $offset;
+            width: 100%;
+        }
 
         // Background color.
 

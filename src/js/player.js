@@ -82,7 +82,7 @@ module.exports = React.createClass({
 		const action = phase === 'play' ? 'play' : 'pause';
 
 		this.state.track[action]();
-		if (phase === 'stop') this.state.track.src = ''; // 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAVFYAAFRWAAABAAgAZGF0YQAAAAA=';
+		if (phase === 'stop') this.state.track.src = '';
 		this.setState({phase: phase});
 
 	},
@@ -125,6 +125,21 @@ module.exports = React.createClass({
 
 	},
 
+	modifyProgress(duration, e) {
+
+		const player = ReactDOM.findDOMNode(this);
+		const progress = player.getElementsByClassName('player__progress')[0];
+		const bounds = progress.getBoundingClientRect();
+		const min = bounds.left;
+		const max = bounds.right;
+		const x = e.clientX;
+		const percentage = (x - min) / (max - min);
+		const elapsed = duration * percentage;
+
+		this.state.track.currentTime = elapsed;
+
+	},
+
 	render() {
 
 		const duration = timer.forceToNumber(this.state.track.duration);
@@ -147,7 +162,7 @@ module.exports = React.createClass({
 
 									(() => {
 
-										const phase = this.state.phase;
+										const phase = this.state.phase === 'play' ? 'pause' : 'play';
 										const className = `player__button player__button--${phase}`;
 
 										return (
@@ -167,7 +182,7 @@ module.exports = React.createClass({
 							</li>
 						</ul>
 						<div className="player__time">
-							<progress className="player__progress" max={duration} value={elapsed}></progress>
+							<progress onClick={this.modifyProgress.bind(this, duration)} className="player__progress" max={duration} value={elapsed}></progress>
 							<span className="player__elapsed">{timer.generate(elapsed)}</span>
 							<span className="player__total">{timer.generate(duration)}</span>
 						</div>
