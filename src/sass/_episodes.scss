@@ -1,4 +1,5 @@
 .episodes {
+    padding: space(small) 0;
 
     &__list {
         list-style: none;
@@ -13,10 +14,6 @@
 
     &--dormantBefore {
         transform: translateY(30px);
-    }
-
-    &--dormantActive {
-
     }
 
     &--dormantAfter {

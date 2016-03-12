@@ -45,28 +45,16 @@ $color: (
     )
 );
 
-$zIndex: (
-    player: 100
-);
-
-@function zIndex($type) {
-    @return map-get($zIndex, $type);
-}
-
 @function color($type, $tint: medium) {
     $type: map-get($color, $type);
     @return map-get($type, $tint);
 }
 
-@mixin ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 100%;
-}
+$zIndex: (
+    cap: 200,
+    player: 100
+);
 
-@mixin resetButton {
-    background: transparent;
-    border: 0;
-    padding: 0;
+@function zIndex($type) {
+    @return map-get($zIndex, $type);
 }

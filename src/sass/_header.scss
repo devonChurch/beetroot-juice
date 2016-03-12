@@ -1,0 +1,37 @@
+.header {
+    @include generateCap(header);
+
+    &__title {
+        font: {
+            size: 46px;
+            weight: 100;
+        }
+        line-height: 0.85;
+        margin: 0;
+        position: relative;
+        // Force text reflow.
+        width: 1px;
+
+        &:before {
+            background: rgba(white, 0.5);
+            content: '';
+            display: block;
+            height: 1px;
+            left: -#{space()};
+            position: absolute;
+            top: 40px;
+            width: 200px;
+        }
+    }
+
+    &__hosts {
+        color: color(teal, dark);
+        margin: space() 0;
+    }
+
+    &__description {
+        font-size: 11px;
+        line-height: 1.8;
+        margin: 0;
+    }
+}

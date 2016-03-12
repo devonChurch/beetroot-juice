@@ -1,0 +1,60 @@
+.footer {
+    @include generateCap(footer);
+
+    &__title {
+        font: {
+            size: 14px;
+            weight: 300;
+        }
+        margin: 0 0 space(tiny) 0;
+    }
+
+    &__underline {
+        border-bottom: 1px solid white;
+        padding-bottom: space(tiny);
+    }
+
+    &__sources {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: space() 0 0;
+    }
+
+    &__source {
+        width: 50%;
+    }
+
+    &__link {
+        align-items: center;
+        color: inherit;
+        display: flex;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+
+            .footer__icon {
+                fill: white;
+            }
+
+            .footer__service {
+                color: white;
+            }
+        }
+    }
+
+    &__icon {
+        fill: color(teal, dark);
+        height: space();
+        transition: fill speed(fast) ease();
+        width: space();
+    }
+
+    &__service {
+        color: color(teal, dark);
+        font-size: 11px;
+        padding-left: space(small);
+        transition: color speed(fast) ease();
+    }
+}
