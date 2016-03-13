@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "webpack",
-    "lint": "eslint ./src/js --ext .js --ext .jsx --fix"
+    "build:development": "webpack",
+    "build:production": "webpack -p",
+    "demo": "npm run build:production && git subtree push --prefix dist origin gh-pages"
   },
   "repository": {
     "type": "git",
